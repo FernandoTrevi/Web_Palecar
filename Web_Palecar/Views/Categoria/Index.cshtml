@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Web_Palecar.Models.Categoría>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Lista de Categorías</h2>
+        </div>
+        <div class="col-6">
+            Crear Nueva Categoría
+        </div>
+    </div>
+    <br />
+    @if (Model.Count() > 0)
+    {
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th width="50%">Nombre Categoría</th>
+                    <th width="30%">Orden</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <th>@item.NombreCategoria</th>
+                        <th>@item.MostrarOrden</th>
+                        <th></th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No hay registros de categorías</p>
+    }
+</div>
+
