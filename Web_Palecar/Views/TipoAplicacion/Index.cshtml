@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Web_Palecar.Models.Categoría>
+﻿@model IEnumerable<Web_Palecar.Models.TipoAplicacion>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,10 +7,10 @@
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Lista de Categorías</h2>
+            <h2 class="text-primary">Lista de Tipos de aplicaciones</h2>
         </div>
         <div class="col-6">
-            <a asp-controller="Categoria" asp-action="Crear" class="btn btn-primary">Crear Nueva Categoría</a>
+            <a asp-controller="TipoAplicacion" asp-action="Crear" class="btn btn-primary">Crear Tipo de aplicación</a>
         </div>
     </div>
     <br />
@@ -19,8 +19,8 @@
         <table class="table table-bordered table-striped" style="width:100%">
             <thead>
                 <tr>
-                    <th width="50%">Nombre Categoría</th>
-                    <th width="30%">Orden</th>
+                    <th width="50%">Tipo de aplicaición</th>
+                    
                     <th></th>
                 </tr>
             </thead>
@@ -28,8 +28,7 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <th>@item.NombreCategoria</th>
-                        <th>@item.MostrarOrden</th>
+                        <th>@item.Nombre</th>
                         <th></th>
                     </tr>
                 }
@@ -38,7 +37,7 @@
     }
     else
     {
-        <p>No hay registros de categorías</p>
+        <p>No hay tipo de aplicación</p>
     }
 </div>
 

@@ -4,36 +4,34 @@ using Web_Palecar.Models;
 
 namespace Web_Palecar.Controllers
 {
-    public class CategoriaController : Controller
+    public class TipoAplicacionController : Controller
     {
         private readonly AplicationDBContext _db;
-        public CategoriaController(AplicationDBContext db) 
+        public TipoAplicacionController(AplicationDBContext db)
         {
             _db = db;
         }
         public IActionResult Index()
         {
-            IEnumerable<Categoría> lista = _db.Categoria;
+            IEnumerable<TipoAplicacion> lista = _db.TipoAplicacions;
             return View(lista);
         }
-        //GET
         public IActionResult Crear()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Crear(Categoría categoría)
+        public IActionResult Crear(TipoAplicacion tipoAplicacion)
         {
             if(ModelState.IsValid)
             {
-                _db.Categoria.Add(categoría);
+                _db.TipoAplicacions.Add(tipoAplicacion);
                 _db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            return View(categoría);
-           
+            return View(tipoAplicacion);
+            
         }
-
     }
 }

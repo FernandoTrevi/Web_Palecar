@@ -9,6 +9,7 @@ namespace Web_Palecar.Datos
         {
             
         }
-        public DbSet<Categoría>Categoria  { get; set; }
+        public DbSet<Categoría> Categoria { get; set; }
+        public DbSet<TipoAplicacion> TipoAplicacions { get; set; }
     }
 }
