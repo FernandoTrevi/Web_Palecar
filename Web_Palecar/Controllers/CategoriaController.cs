@@ -61,6 +61,33 @@ namespace Web_Palecar.Controllers
             return View(categoría);
 
         }
+        public IActionResult Eliminar(int? Id)
+        {
+            if (Id == null || Id == 0)
+            {
+                return NotFound();
+            }
+            var obj = _db.Categoria.Find(Id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Eliminar(Categoría categoría)
+        {
+            if (categoría == null)
+            {
+                return NotFound();
+            }
+            _db.Categoria.Remove(categoría);
+            _db.SaveChanges();
+            return RedirectToAction(nameof(Index));
+
+        }
 
     }
 }

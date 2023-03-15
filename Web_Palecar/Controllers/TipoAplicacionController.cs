@@ -60,5 +60,33 @@ namespace Web_Palecar.Controllers
             return View(tipoAplicacion);
 
         }
+
+        public IActionResult Eliminar(int? Id)
+        {
+            if (Id == null || Id == 0)
+            {
+                return NotFound();
+            }
+            var obj = _db.TipoAplicacions.Find(Id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Eliminar(TipoAplicacion tipoAplicacion)
+        {
+            if (tipoAplicacion == null)
+            {
+                return NotFound();
+            }
+            _db.TipoAplicacions.Remove(tipoAplicacion);
+            _db.SaveChanges();
+            return RedirectToAction(nameof(Index));
+
+        }
     }
 }
