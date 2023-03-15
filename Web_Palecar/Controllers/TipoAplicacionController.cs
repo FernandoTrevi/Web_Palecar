@@ -33,5 +33,32 @@ namespace Web_Palecar.Controllers
             return View(tipoAplicacion);
             
         }
+        public IActionResult Editar(int? Id)
+        {
+            if (Id == null || Id == 0)
+            {
+                return NotFound();
+            }
+            var obj = _db.TipoAplicacions.Find(Id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Editar(TipoAplicacion tipoAplicacion)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.TipoAplicacions.Update(tipoAplicacion);
+                _db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(tipoAplicacion);
+
+        }
     }
 }

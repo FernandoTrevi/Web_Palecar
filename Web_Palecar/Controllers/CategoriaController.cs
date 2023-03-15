@@ -34,6 +34,33 @@ namespace Web_Palecar.Controllers
             return View(categoría);
            
         }
+        public IActionResult Editar(int? Id)
+        {
+            if(Id == null || Id == 0)
+            {
+                return NotFound();
+            }
+            var obj = _db.Categoria.Find(Id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Editar(Categoría categoría)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Categoria.Update(categoría);
+                _db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(categoría);
+
+        }
 
     }
 }
