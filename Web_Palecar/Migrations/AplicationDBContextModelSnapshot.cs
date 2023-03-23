@@ -41,6 +41,39 @@ namespace Web_Palecar.Migrations
                     b.ToTable("Categoria");
                 });
 
+            modelBuilder.Entity("Web_Palecar.Models.Producto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("IdCategoria")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdTipoAplicacion")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NombreProducto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Precio")
+                        .HasColumnType("float");
+
+                    b.Property<string>("UrlImagen")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdCategoria");
+
+                    b.HasIndex("IdTipoAplicacion");
+
+                    b.ToTable("Productos");
+                });
+
             modelBuilder.Entity("Web_Palecar.Models.TipoAplicacion", b =>
                 {
                     b.Property<int>("Id")
@@ -56,6 +89,25 @@ namespace Web_Palecar.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TipoAplicacions");
+                });
+
+            modelBuilder.Entity("Web_Palecar.Models.Producto", b =>
+                {
+                    b.HasOne("Web_Palecar.Models.Categoría", "Categoría")
+                        .WithMany()
+                        .HasForeignKey("IdCategoria")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Web_Palecar.Models.TipoAplicacion", "TipoAplicacion")
+                        .WithMany()
+                        .HasForeignKey("IdTipoAplicacion")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categoría");
+
+                    b.Navigation("TipoAplicacion");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,106 @@
+﻿@model Web_Palecar.Models.ViewModels.ProductoVM
+@{
+    var titulo = "Crear Nuevo Producto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+    @if (Model.producto.Id != 0)
+    {
+        titulo = "Editar Producto";
+        <input asp-for="producto.Id" hidden />
+    }
+    <div class="border-p3"></div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <h2 class="text-info">@titulo</h2>
+        </div>
+
+        <div class="row">
+           
+            <div class="col-8 border-p3" >
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                        <label asp-for="producto.NombreProducto" class="form-label">Nombre del producto</label>
+                        <input asp-for="producto.NombreProducto" class="form-control" />
+                        <span asp-validation-for="producto.NombreProducto" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                        <label asp-for="producto.Precio" class="form-label">Precio</label>
+                        <input asp-for="producto.Precio" class="form-control" />
+                        <span asp-validation-for="producto.Precio" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                        <label asp-for="producto.UrlImagen" class="form-label">Imagen</label>
+                            <input type="file" name="files" id="IdImagen"  />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                        <label asp-for="producto.IdCategoria" class="form-label">Categoría</label>
+                        <select asp-for="producto.IdCategoria" asp-items="@Model.CategoriaLista" class="form-select">
+                                <option disabled selected>--Seleccione una categoría </option>
+                            </select>
+                        </div>
+                    </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="producto.IdTipoAplicacion" class="form-label">Categoría</label>
+                        <select asp-for="producto.IdTipoAplicacion" asp-items="@Model.TipoAplicacionLista" class="form-select">
+                            <option disabled selected>--Seleccione una tipo </option>
+                        </select>
+                    </div>
+                </div>
+                    <br />
+                    <div class="d-grid gap-2 d-md-block">
+                    @if (Model.producto.Id != 0)
+                        {
+                            <button type="submit" class="btn btn-primary">Editar</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary" onclick="return sweetAlertCargarImg()">Crear Nuevo</button>
+
+                        }
+                        <a asp-controller="Producto" asp-action="Index" class="btn btn-success">Regresar</a>
+                       
+                    </div>
+                    
+                </div>
+
+            </div>
+            <div class="col-4">
+            @if(Model.producto.Id!=0)
+            {
+                <img src="@WC.ImagenRuta@Model.producto.UrlImagen" width="100%" style="border-radius:5px; border: 1px solid #bbb"/>
+            }
+
+            </div>
+        </div>
+
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        function sweetAlertCargarImg(){
+            if (document.getElementById("IdImagen").value == "") {
+                swal("¡Error!", "¡No se agregó imagen del producto!", "error");
+
+                return false;
+            }
+            return true;
+        }
+    </script>
+}
+
+

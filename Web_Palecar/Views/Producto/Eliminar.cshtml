@@ -1,0 +1,79 @@
+﻿@model Web_Palecar.Models.Producto
+
+@{
+    ViewData["Title"] = "Eliminar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post" asp-action="Eliminar" enctype="multipart/form-data">
+     <input asp-for="Id" hidden />
+    <div class="border-p3"></div>
+     <div class="row">
+        <h2 class="text-danger">Desea eliminar este producto?</h2>
+    </div>
+
+    <div class="row">
+
+        <div class="col-8 border-p3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="NombreProducto" class="form-label">Nombre del producto</label>
+                        <input asp-for="NombreProducto" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Precio" class="form-label">Precio</label>
+                        <input asp-for="Precio" disabled class="form-control" />
+
+                    </div>
+                </div>
+                <div class="row" hidden>
+                    <div class="col-md-6">
+                        <label asp-for="UrlImagen" class="form-label">Imagen</label>
+                        <input asp-for="UrlImagen" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="IdCategoria" class="form-label">Categoría</label>
+                        <input asp-for="IdCategoria" hidden/>
+                        <input asp-for="Categoría.NombreCategoria"disabled class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="IdTipoAplicacion" class="form-label">Categoría</label>
+                        <input asp-for="IdTipoAplicacion" hidden />
+                        <input asp-for="TipoAplicacion.Nombre" disabled class="form-control" />
+                    </div>
+                </div>
+                <br />
+                <div class="d-grid gap-2 d-md-block">                  
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <a asp-controller="Producto" asp-action="Index" class="btn btn-success">Regresar</a>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col-4">
+         
+                <img src="@WC.ImagenRuta@Model.UrlImagen" width="100%" style="border-radius:5px; border: 1px solid #bbb" />
+            
+
+        </div>
+    </div>
+
+</form>
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+
+
