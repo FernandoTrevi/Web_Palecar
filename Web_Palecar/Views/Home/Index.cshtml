@@ -1,8 +1,48 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model Web_Palecar.Models.ViewModels.HomeVM
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <div class="text-center">
+        <button class="btn btn-dark filter-button" data-filter="all">Todos</button>
+        @foreach (var cat in Model.categorías)
+        {
+            <button class="btn btn-outline-secondary filter-button" data-filter="@cat.NombreCategoria.Replace(' ','_')">@cat.NombreCategoria</button>
+        }
+
+    </div>
+    <br />
+    <div class="row">
+        @foreach (var prod in Model.productos)
+        {
+            <partial name="_productoCard" model="prod"></partial>
+        }
+
+    </div>
+
+
 </div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {//para asegurarse de que el código se ejecute después de que se cargue completamente el documento.
+
+            $(".filter-button").click(function () {//se adjunta una función de clic a los elementos con la clase .filter-button
+
+                var value = $(this).attr('data-filter');//se extrae el valor del atributo data-filter
+
+                if (value == "all")// Si el valor es "all",
+                {
+                    $('.filter').show('1000');//se muestran todos los elementos con la clase .filter
+                }
+                else //Si el valor no es "all"
+                {
+                    //se ocultan los elementos con la clase .filterque no tienen la clase correspondiente a value
+                    $(".filter").not('.'+value).hide('3000');
+                    //se muestran los elementos con la clase .filterque sí tienen la clase correspondiente a value
+                    $('.filter').filter('.'+value).show('3000');
+
+                }
+            });
+
+        });
+    </script>
+}

@@ -1,21 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using Web_Palecar.Datos;
 using Web_Palecar.Models;
+using Web_Palecar.Models.ViewModels;
 
 namespace Web_Palecar.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly AplicationDBContext _db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, AplicationDBContext db)
         {
             _logger = logger;
+            _db = db;
         }
 
         public IActionResult Index()
         {
-            return View();
+            HomeVM homevm = new HomeVM()
+            {
+                productos = _db.Productos.Include(c => c.Categoría).Include(t => t.TipoAplicacion),
+                categorías = _db.Categoria
+            };
+            return View(homevm);
         }
 
         public IActionResult Privacy()

@@ -22,17 +22,27 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Categoria" asp-action="Index">Categorías</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="TipoAplicacion" asp-action="Index">Tipos de Aplicacion</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Producto" asp-action="Index">Produtos</a>
+                        </li>                   
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Administrar Contenido
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Categoria" asp-action="Index">Categorías</a>
+                                </li>
+                                <li>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="TipoAplicacion" asp-action="Index">Tipos de Aplicacion</a>
+                                </li>
+                                <li>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Producto" asp-action="Index">Produtos</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
+
+
                 </div>
             </div>
         </nav>
