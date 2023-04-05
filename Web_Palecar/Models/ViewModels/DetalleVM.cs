@@ -10,6 +10,5 @@
         public bool ExisteEnCarro  { get; set; }
         public IEnumerable<Producto>? productosLista { get; set; }
 
-
     }
 }
