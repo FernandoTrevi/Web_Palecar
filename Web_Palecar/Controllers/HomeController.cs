@@ -29,7 +29,7 @@ namespace Web_Palecar.Controllers
             };
             return View(homevm);
         }
-        public IActionResult Detalle(int Id)
+        public IActionResult Detalle(int Id, double Monto, double Cantidad)
         {
             List<CarroCompra> carroComprasLista = new List<CarroCompra>();
             if (HttpContext.Session.Get<IEnumerable<CarroCompra>>(WC.SessionCarroCompras) != null &&
@@ -44,29 +44,32 @@ namespace Web_Palecar.Controllers
                                        .Where(p => p.Id == Id).FirstOrDefault(),
                 ExisteEnCarro = false,
                 productosLista = _db.Productos.Include(c => c.Categoría).Include(t => t.TipoAplicacion),
+               
 
 
             };
             foreach (var item in carroComprasLista)
             {
-                if (item.ProductoId== Id)
+                if (item.ProductoId == Id)
                 {
-                    detallevm.ExisteEnCarro= true;
+                    detallevm.ExisteEnCarro = true;
+                    detallevm.Cantidad = Cantidad;
+                    detallevm.Monto = Monto;
                 }
             }
             return View(detallevm);
         }
 
         [HttpPost, ActionName("Detalle")]
-        public IActionResult DetallePost(int Id)
+        public IActionResult DetallePost(int Id, double Monto, double Cantidad)
         {
             List<CarroCompra> carroComprasLista = new List<CarroCompra>();
-            if (HttpContext.Session.Get<IEnumerable<CarroCompra>>(WC.SessionCarroCompras)!= null &&
-                HttpContext.Session.Get<IEnumerable<CarroCompra>>(WC.SessionCarroCompras).Count()>0)
+            if (HttpContext.Session.Get<IEnumerable<CarroCompra>>(WC.SessionCarroCompras) != null &&
+                HttpContext.Session.Get<IEnumerable<CarroCompra>>(WC.SessionCarroCompras).Count() > 0)
             {
                 carroComprasLista = HttpContext.Session.Get<List<CarroCompra>>(WC.SessionCarroCompras);
             };
-            carroComprasLista.Add(new CarroCompra { ProductoId = Id });
+            carroComprasLista.Add(new CarroCompra { ProductoId = Id, Monto= Monto, Cantidad=Cantidad });
             HttpContext.Session.Set(WC.SessionCarroCompras, carroComprasLista);
             return RedirectToAction("Index");
         }
