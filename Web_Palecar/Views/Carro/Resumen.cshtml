@@ -57,12 +57,16 @@
                                         <span class="text-info">Resumen:</span>
                                     </h4>
                                     <ul class="list-group mb-3">
-                                        @foreach (var item in Model.productoLista)
+                                        @for (int i = 0; i<Model.productoLista.Count(); i++)
                                         {
+                                           
                                             <li class="list-group-item d-flex justify-content-between">
+                                                <input type="hidden" asp-for="@Model.productoLista[i].Id">
+
+                                                <input type="hidden" asp-for="@Model.productoLista[i].NombreProducto">
                                                 <div>
-                                                    <h6 class="my-0">@item.NombreProducto</h6>
-                                                    <small class="text-muted">Precio por Kg: @item.Precio</small>
+                                                    <h6 class="my-0">@Model.productoLista[i].NombreProducto</h6>
+                                                    <small class="text-muted">Precio por Kg: @Model.productoLista[i].Precio</small>
                                                 </div>
                                             </li>
                                         }

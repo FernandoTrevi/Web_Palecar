@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Text;
 using Web_Palecar.Datos;
 using Web_Palecar.Models;
 using Web_Palecar.Models.ViewModels;
@@ -12,14 +15,16 @@ namespace Web_Palecar.Controllers
     [Authorize]
     public class CarroController : Controller
     {
+        [BindProperty]
+        public ProductoUsuarioVM productoUsuarioVM { get; set; }
         private readonly AplicationDBContext _db;
-
-        [BindProperty]//propiedad para que se pueda usar el VM en todo el controlador
-        public ProductoUsuarioVM productoUsuarioVM { get; set; }//Variable para poder usar el VM creado
-
-        public CarroController(AplicationDBContext db)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IEmailSender _emailSender;
+        public CarroController(AplicationDBContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
         {
-           _db=db; 
+            _db = db;
+            _webHostEnvironment = webHostEnvironment;
+            _emailSender = emailSender;
         }
         public IActionResult Index()
         {
@@ -63,9 +68,52 @@ namespace Web_Palecar.Controllers
             productoUsuarioVM = new ProductoUsuarioVM()
             {
                 usuariosAplicacion = _db.UsuariosAplicacions.FirstOrDefault(u => u.Id == claim.Value),
-                productoLista = prodList
+                productoLista = prodList.ToList(),
             };
             return View(productoUsuarioVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Resumen")]
+        public async Task<IActionResult> ResumenPost(ProductoUsuarioVM productoUsuarioVM)
+        {
+            var templatePath = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+                                                               + "templates"
+                                                               + Path.DirectorySeparatorChar.ToString()
+                                                               + "PlantillaOrden.html";
+            var subjet = "Nueva orden";
+            var htmlBody = "";
+
+            using (StreamReader sr = System.IO.File.OpenText(templatePath))
+            {
+                htmlBody = sr.ReadToEnd();
+            }
+
+            StringBuilder productoListaSb = new StringBuilder();
+
+            foreach (var prod in productoUsuarioVM.productoLista)
+            {
+                productoListaSb.Append($" - Nombre: {prod.NombreProducto} <span style=´font-size:14px;´>(Id: {prod.Id})<span/><br/>");
+            }
+
+            string msgBody = string.Format(htmlBody,
+                                           productoUsuarioVM.usuariosAplicacion.NombreCompleto,
+                                           productoUsuarioVM.usuariosAplicacion.Email,
+                                           productoUsuarioVM.usuariosAplicacion.PhoneNumber,
+                                           productoListaSb.ToString());
+
+            await _emailSender.SendEmailAsync(WC.EmailAdmin, subjet, msgBody);
+
+
+
+            return RedirectToAction(nameof(Confirmacion));
+        }
+
+        public IActionResult Confirmacion()
+        {
+            HttpContext.Session.Clear();
+            return View();
         }
 
         public IActionResult Remover(int Id)
