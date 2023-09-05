@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using Web_Palecar.Datos;
-using Web_Palecar.Models;
-using Web_Palecar.Models.ViewModels;
-using Web_Palecar.Utilidades;
+using Palecar_AccesoADatos.Datos;
+using Palecar_Modelos;
+using Palecar_Modelos.ViewModels;
+using Palecar_Utilidades;
 
 namespace Web_Palecar.Controllers
 {

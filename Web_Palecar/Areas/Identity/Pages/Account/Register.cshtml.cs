@@ -18,7 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Web_Palecar.Models;
+using Palecar_Modelos;
+using Palecar_Utilidades;
 
 namespace Web_Palecar.Areas.Identity.Pages.Account
 {
@@ -172,8 +173,16 @@ namespace Web_Palecar.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        if(!User.IsInRole(WC.AdminRole))
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index");
+                        }
                         return LocalRedirect(returnUrl);
+
                     }
                 }
                 foreach (var error in result.Errors)

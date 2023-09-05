@@ -2,14 +2,18 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Editing;
 using Microsoft.EntityFrameworkCore;
-using Web_Palecar.Datos;
-using Web_Palecar.Models;
-using Web_Palecar.Models.ViewModels;
+using Palecar_Utilidades;
+using Palecar_Modelos;
+using Palecar_Modelos.ViewModels;
 using System.IO;
-
+using Palecar_AccesoADatos.Datos;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web_Palecar.Controllers
 {
+    [Authorize(Roles = WC.AdminRole)]
+
     public class ProductoController : Controller
     {
         private readonly AplicationDBContext _db;

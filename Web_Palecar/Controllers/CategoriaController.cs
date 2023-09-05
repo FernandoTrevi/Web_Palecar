@@ -1,9 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Web_Palecar.Datos;
-using Web_Palecar.Models;
+using Web_Palecar;
+using Palecar_Modelos;
+using Palecar_AccesoADatos.Datos;
+using Microsoft.AspNetCore.Authorization;
+using Palecar_Utilidades;
+using System.Data;
 
 namespace Web_Palecar.Controllers
 {
+    [Authorize(Roles = WC.AdminRole)]
+
     public class CategoriaController : Controller
     {
         private readonly AplicationDBContext _db;

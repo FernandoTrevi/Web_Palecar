@@ -22,4 +22,10 @@
     <Folder Include="wwwroot\imagenes\productos\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Palecar_AccesoADatos\Palecar_AccesoADatos.csproj" />
+    <ProjectReference Include="..\Palecar_Modelos\Palecar_Modelos.csproj" />
+    <ProjectReference Include="..\Palecar_Utilidades\Palecar_Utilidades.csproj" />
+  </ItemGroup>
+
 </Project>

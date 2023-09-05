@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Web_Palecar.Datos;
-using Web_Palecar.Utilidades;
+using Palecar_Utilidades;
+using Palecar_AccesoADatos.Datos;
 
 var builder = WebApplication.CreateBuilder(args);
 

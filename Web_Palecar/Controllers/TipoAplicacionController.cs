@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Web_Palecar.Datos;
-using Web_Palecar.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Palecar_AccesoADatos.Datos;
+using Palecar_Modelos;
+using Palecar_Utilidades;
 
 namespace Web_Palecar.Controllers
 {
+    [Authorize(Roles = WC.AdminRole)]
     public class TipoAplicacionController : Controller
     {
         private readonly AplicationDBContext _db;
