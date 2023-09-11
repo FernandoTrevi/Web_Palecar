@@ -5,6 +5,8 @@ using Palecar_AccesoADatos.Datos;
 using Microsoft.AspNetCore.Authorization;
 using Palecar_Utilidades;
 using System.Data;
+using Palecar_AccesoADatos.Datos.Repositorio;
+using Palecar_AccesoADatos.Datos.Repositorio.IRepositorio;
 
 namespace Web_Palecar.Controllers
 {
@@ -12,14 +14,14 @@ namespace Web_Palecar.Controllers
 
     public class CategoriaController : Controller
     {
-        private readonly AplicationDBContext _db;
-        public CategoriaController(AplicationDBContext db) 
+        private readonly ICategoriaRepositorio _catRepo;
+        public CategoriaController(ICategoriaRepositorio catRepo) 
         {
-            _db = db;
+            _catRepo = catRepo;
         }
         public IActionResult Index()
         {
-            IEnumerable<Categoría> lista = _db.Categoria;
+            IEnumerable<Categoría> lista = _catRepo.ObtenerTodos();
             return View(lista);
         }
         //GET
@@ -33,8 +35,8 @@ namespace Web_Palecar.Controllers
         {
             if(ModelState.IsValid)
             {
-                _db.Categoria.Add(categoría);
-                _db.SaveChanges();
+                _catRepo.Agregar(categoría);
+                _catRepo.Grabar();
                 return RedirectToAction(nameof(Index));
             }
             return View(categoría);
@@ -46,7 +48,7 @@ namespace Web_Palecar.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.Categoria.Find(Id);
+            var obj = _catRepo.Obtener(Id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
@@ -60,8 +62,8 @@ namespace Web_Palecar.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Categoria.Update(categoría);
-                _db.SaveChanges();
+                _catRepo.Actualizar(categoría);
+                _catRepo.Grabar();
                 return RedirectToAction(nameof(Index));
             }
             return View(categoría);
@@ -73,7 +75,7 @@ namespace Web_Palecar.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.Categoria.Find(Id);
+            var obj = _catRepo.Obtener(Id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
@@ -89,8 +91,8 @@ namespace Web_Palecar.Controllers
             {
                 return NotFound();
             }
-            _db.Categoria.Remove(categoría);
-            _db.SaveChanges();
+            _catRepo.Remover(categoría);
+            _catRepo.Grabar();
             return RedirectToAction(nameof(Index));
 
         }

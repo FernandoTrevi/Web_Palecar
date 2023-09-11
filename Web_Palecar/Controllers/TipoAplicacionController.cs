@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palecar_AccesoADatos.Datos;
+using Palecar_AccesoADatos.Datos.Repositorio.IRepositorio;
 using Palecar_Modelos;
 using Palecar_Utilidades;
 
@@ -9,14 +10,14 @@ namespace Web_Palecar.Controllers
     [Authorize(Roles = WC.AdminRole)]
     public class TipoAplicacionController : Controller
     {
-        private readonly AplicationDBContext _db;
-        public TipoAplicacionController(AplicationDBContext db)
+        private readonly ITipoAplicacionRepositorio _tipoRepo;
+        public TipoAplicacionController(ITipoAplicacionRepositorio tipoRepo)
         {
-            _db = db;
+            _tipoRepo = tipoRepo;
         }
         public IActionResult Index()
         {
-            IEnumerable<TipoAplicacion> lista = _db.TipoAplicacions;
+            IEnumerable<TipoAplicacion> lista = _tipoRepo.ObtenerTodos();
             return View(lista);
         }
         public IActionResult Crear()
@@ -29,8 +30,8 @@ namespace Web_Palecar.Controllers
         {
             if(ModelState.IsValid)
             {
-                _db.TipoAplicacions.Add(tipoAplicacion);
-                _db.SaveChanges();
+                _tipoRepo.Agregar(tipoAplicacion);
+                _tipoRepo.Grabar();
                 return RedirectToAction(nameof(Index));
             }
             return View(tipoAplicacion);
@@ -42,7 +43,7 @@ namespace Web_Palecar.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.TipoAplicacions.Find(Id);
+            var obj = _tipoRepo.Obtener(Id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
@@ -56,8 +57,8 @@ namespace Web_Palecar.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.TipoAplicacions.Update(tipoAplicacion);
-                _db.SaveChanges();
+                _tipoRepo.Actualizar(tipoAplicacion);
+                _tipoRepo.Grabar();
                 return RedirectToAction(nameof(Index));
             }
             return View(tipoAplicacion);
@@ -70,7 +71,7 @@ namespace Web_Palecar.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.TipoAplicacions.Find(Id);
+            var obj = _tipoRepo.Obtener(Id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
@@ -86,8 +87,8 @@ namespace Web_Palecar.Controllers
             {
                 return NotFound();
             }
-            _db.TipoAplicacions.Remove(tipoAplicacion);
-            _db.SaveChanges();
+            _tipoRepo.Remover(tipoAplicacion);
+            _tipoRepo.Grabar();
             return RedirectToAction(nameof(Index));
 
         }

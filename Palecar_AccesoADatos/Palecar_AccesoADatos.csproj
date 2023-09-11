@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Palecar_Modelos\Palecar_Modelos.csproj" />
+    <ProjectReference Include="..\Palecar_Utilidades\Palecar_Utilidades.csproj" />
   </ItemGroup>
 
 </Project>

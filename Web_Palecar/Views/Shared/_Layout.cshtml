@@ -11,14 +11,19 @@
     <title>@ViewData["Title"] -Palecar</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/material.css" />
     <link rel="stylesheet" href="~/Web_Palecar.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/fontawesome/css/all.css"/>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Palecar</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/imagenes/tile.png" width="40%" />
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -27,7 +32,7 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>                   
                         @if (User.IsInRole(WC.AdminRole))
                         {
@@ -37,16 +42,16 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Categoria" asp-action="Index">Categorías</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Categoria" asp-action="Index">Categorías</a>
                                     </li>
                                     <li>
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="TipoAplicacion" asp-action="Index">Tipos de Aplicacion</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="TipoAplicacion" asp-action="Index">Tipos de Aplicacion</a>
                                     </li>
                                     <li>
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Producto" asp-action="Index">Produtos</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Producto" asp-action="Index">Produtos</a>
                                     </li>
                                     <li>
-                                        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Crear Nuevo Usuario</a>
+                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Crear Nuevo Usuario</a>
                                     </li>
                                 </ul>
                             </li>
@@ -77,21 +82,24 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container text-white">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer bg-dark">
         <div class="container">
-            &copy; 2023 - Web_Palecar - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - Web_Palecar
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

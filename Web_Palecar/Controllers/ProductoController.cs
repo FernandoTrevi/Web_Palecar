@@ -9,6 +9,7 @@ using System.IO;
 using Palecar_AccesoADatos.Datos;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using Palecar_AccesoADatos.Datos.Repositorio.IRepositorio;
 
 namespace Web_Palecar.Controllers
 {
@@ -16,17 +17,19 @@ namespace Web_Palecar.Controllers
 
     public class ProductoController : Controller
     {
-        private readonly AplicationDBContext _db;
+        private readonly IProductoRepositorio _productoRepo;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public ProductoController(AplicationDBContext db, IWebHostEnvironment webHostEnvironment)
+        public ProductoController(IProductoRepositorio productoRepo, IWebHostEnvironment webHostEnvironment)
         {
-            _db = db;
+            _productoRepo = productoRepo;
             _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
-            IEnumerable<Producto> lista = _db.Productos.Include(p => p.Categoría)
-                                                       .Include(t => t.TipoAplicacion);
+            //IEnumerable<Producto> lista = _db.Productos.Include(p => p.Categoría)
+            //                                           .Include(t => t.TipoAplicacion);
+
+            IEnumerable<Producto> lista = _productoRepo.ObtenerTodos(incluirPropiedades: "Categoría,TipoAplicacion");
             return View(lista);
         }
         public IActionResult Upsert(int? id)
@@ -42,16 +45,18 @@ namespace Web_Palecar.Controllers
             ProductoVM productoVM = new ProductoVM()
             {
                 producto = new Producto(),
-                CategoriaLista = _db.Categoria.Select(c => new SelectListItem
-                {
-                    Text = c.NombreCategoria,
-                    Value = c.Id.ToString()
-                }),
-                 TipoAplicacionLista = _db.TipoAplicacions.Select(t => new SelectListItem
-                 {
-                     Text = t.Nombre,
-                     Value = t.Id.ToString()
-                 })
+                //CategoriaLista = _db.Categoria.Select(c => new SelectListItem
+                //{
+                //    Text = c.NombreCategoria,
+                //    Value = c.Id.ToString()
+                //}),
+                // TipoAplicacionLista = _db.TipoAplicacions.Select(t => new SelectListItem
+                // {
+                //     Text = t.Nombre,
+                //     Value = t.Id.ToString()
+                // })
+                CategoriaLista = _productoRepo.ObtenerTodosDropDownList(WC.CategoriaNombre),
+                TipoAplicacionLista = _productoRepo.ObtenerTodosDropDownList(WC.TipoAplcacionNombre)
 
         };
 
@@ -62,7 +67,7 @@ namespace Web_Palecar.Controllers
             }
             else
             {
-                productoVM.producto = _db.Productos.Find(id);
+                productoVM.producto = _productoRepo.Obtener(id.GetValueOrDefault());
                 if (productoVM.producto == null)
                 {
                     return NotFound();
@@ -89,11 +94,11 @@ namespace Web_Palecar.Controllers
                         files[0].CopyTo(filestream);
                     }
                     productovm.producto.UrlImagen = filename+extension;
-                    _db.Productos.Add(productovm.producto);
+                    _productoRepo.Agregar(productovm.producto);
                 }
                 else
                 {
-                    var objProducto = _db.Productos.AsNoTracking().FirstOrDefault(p=> p.Id == productovm.producto.Id);
+                    var objProducto = _productoRepo.ObtenerPrimero(p => p.Id == productovm.producto.Id, isTracking: false);
                     if(files.Count > 0)// si el usuario intenta cambiar la imagen
                     {
                         //creamos la nueva imagen
@@ -120,12 +125,15 @@ namespace Web_Palecar.Controllers
                         productovm.producto.UrlImagen = objProducto.UrlImagen;
                     }
                     //actualizamos el producto
-                    _db.Productos.Update(productovm.producto);
+                    _productoRepo.Actualizar(productovm.producto);
 
                 }
-                _db.SaveChanges();
+                _productoRepo.Grabar();
                 return RedirectToAction("Index");
             }// if ModelIsValid
+            productovm.CategoriaLista = _productoRepo.ObtenerTodosDropDownList(WC.CategoriaNombre);
+            productovm.TipoAplicacionLista = _productoRepo.ObtenerTodosDropDownList(WC.TipoAplcacionNombre);
+
             return View(productovm);
 
         }
@@ -136,10 +144,8 @@ namespace Web_Palecar.Controllers
             {
                 return NotFound();
             }
-            Producto producto = _db.Productos.Include(c => c.Categoría)
-                                             .Include(t => t.TipoAplicacion)
-                                             .FirstOrDefault(f=> f.Id == id );
-            if(producto == null)
+            Producto producto = _productoRepo.ObtenerPrimero(f=> f.Id == id, incluirPropiedades: "Categoría,TipoAplicacion");
+            if (producto == null)
             {
                 return NotFound();
             }
@@ -164,8 +170,8 @@ namespace Web_Palecar.Controllers
                 System.IO.File.Delete(anteriorFile);
             }
 
-            _db.Productos.Remove(producto);           //eliminamos el producto
-            _db.SaveChanges();                        //guardamos los cambios en el dbContext
+            _productoRepo.Remover(producto);           //eliminamos el producto
+            _productoRepo.Grabar();                        //guardamos los cambios en el dbContext
             return RedirectToAction(nameof(Index));   //redireccionamos al index
         }
 

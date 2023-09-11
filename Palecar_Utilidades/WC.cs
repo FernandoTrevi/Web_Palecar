@@ -7,6 +7,9 @@
         public const string AdminRole = "admin";
         public const string ClienteRole = "cliente";
 
+        public const string CategoriaNombre = "Categoría";
+        public const string TipoAplcacionNombre = "TipoAplicacion";
+
         public const string EmailAdmin = "trevi83.ft@gmail.com";
 
     }

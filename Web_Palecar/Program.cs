@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Palecar_Utilidades;
 using Palecar_AccesoADatos.Datos;
+using Palecar_AccesoADatos.Datos.Repositorio.IRepositorio;
+using Palecar_AccesoADatos.Datos.Repositorio;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,10 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+builder.Services.AddScoped<ICategoriaRepositorio, CategoriaRepositorio>();
+builder.Services.AddScoped<ITipoAplicacionRepositorio, TipoAplicacionRepositorio>();
+builder.Services.AddScoped<IProductoRepositorio, ProductoRepositorio>();
 
 var app = builder.Build();
 
