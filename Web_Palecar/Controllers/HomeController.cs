@@ -6,26 +6,33 @@ using Palecar_AccesoADatos.Datos;
 using Palecar_Modelos;
 using Palecar_Modelos.ViewModels;
 using Palecar_Utilidades;
+using Palecar_AccesoADatos.Datos.Repositorio.IRepositorio;
 
 namespace Web_Palecar.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly AplicationDBContext _db;
+        private readonly IProductoRepositorio _productoRepo;
+        private readonly ICategoriaRepositorio _categoriaRepo;
 
-        public HomeController(ILogger<HomeController> logger, AplicationDBContext db)
+        public HomeController(ILogger<HomeController> logger,
+                            IProductoRepositorio productoRepo,
+                            ICategoriaRepositorio categoriaRepo)
         {
             _logger = logger;
-            _db = db;
+            _categoriaRepo = categoriaRepo;
+            _productoRepo = productoRepo;
         }
 
         public IActionResult Index()
         {
             HomeVM homevm = new HomeVM()
             {
-                productos = _db.Productos.Include(c => c.Categoría).Include(t => t.TipoAplicacion),
-                categorías = _db.Categoria
+                //productos = _db.Productos.Include(c => c.Categoría).Include(t => t.TipoAplicacion),
+                //categorías = _db.Categoria
+                productos = _productoRepo.ObtenerTodos(incluirPropiedades: "Categoría,TipoAplicacion"),
+                categorías = _categoriaRepo.ObtenerTodos()
             };
             return View(homevm);
         }
@@ -40,11 +47,12 @@ namespace Web_Palecar.Controllers
             DetalleVM detallevm = new DetalleVM()
             {
 
-                producto = _db.Productos.Include(c => c.Categoría).Include(t => t.TipoAplicacion)
-                                       .Where(p => p.Id == Id).FirstOrDefault(),
+                //producto = _db.Productos.Include(c => c.Categoría).Include(t => t.TipoAplicacion)
+                //                       .Where(p => p.Id == Id).FirstOrDefault(),
+                producto = _productoRepo.ObtenerPrimero(p => p.Id == Id),
                 ExisteEnCarro = false,
-                productosLista = _db.Productos.Include(c => c.Categoría).Include(t => t.TipoAplicacion),
-               
+                productosLista = _productoRepo.ObtenerTodos(incluirPropiedades: "Categoría,TipoAplicacion"),
+
 
 
             };

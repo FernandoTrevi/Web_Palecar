@@ -9,6 +9,7 @@ using Palecar_Modelos;
 using Palecar_Modelos.ViewModels;
 using Palecar_Utilidades;
 using Palecar_AccesoADatos.Datos;
+using Palecar_AccesoADatos.Datos.Repositorio.IRepositorio;
 
 namespace Web_Palecar.Controllers
 {
@@ -17,14 +18,25 @@ namespace Web_Palecar.Controllers
     {
         [BindProperty]
         public ProductoUsuarioVM productoUsuarioVM { get; set; }
-        private readonly AplicationDBContext _db;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IEmailSender _emailSender;
-        public CarroController(AplicationDBContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
+        private readonly IProductoRepositorio _productoRepo;
+        private readonly IUsuarioAplicacionRepositorio _usuarioRepo;
+        private readonly IOrdenDetalleRepositorio _ordenDetalleRepo;
+        private readonly IOrdenRepositorio _ordenRepo;
+        public CarroController(IWebHostEnvironment webHostEnvironment, IEmailSender emailSender,
+                                IProductoRepositorio productoRepo,
+                                IUsuarioAplicacionRepositorio usuarioRepo,
+                                IOrdenDetalleRepositorio ordenDetalleRepo,
+                                IOrdenRepositorio ordenRepo)
         {
-            _db = db;
             _webHostEnvironment = webHostEnvironment;
             _emailSender = emailSender;
+            _productoRepo = productoRepo;
+            _usuarioRepo = usuarioRepo;
+            _ordenDetalleRepo = ordenDetalleRepo;
+            _ordenRepo = ordenRepo;
+
         }
         public IActionResult Index()
         {
@@ -35,8 +47,8 @@ namespace Web_Palecar.Controllers
                 carroComprasList = HttpContext.Session.Get<List<CarroCompra>>(WC.SessionCarroCompras);
             }
             List<int> ProdInCarro = carroComprasList.Select(i=> i.ProductoId).ToList();
-            IEnumerable<Producto> prodList = _db.Productos.Where(p => ProdInCarro.Contains(p.Id));
-               
+            //IEnumerable<Producto> prodList = _db.Productos.Where(p => ProdInCarro.Contains(p.Id));
+            IEnumerable<Producto> prodList = _productoRepo.ObtenerTodos(p => ProdInCarro.Contains(p.Id));
             return View(prodList);
         }
 
@@ -62,12 +74,13 @@ namespace Web_Palecar.Controllers
                 carroComprasList = HttpContext.Session.Get<List<CarroCompra>>(WC.SessionCarroCompras);
             }
             List<int> ProdInCarro = carroComprasList.Select(i => i.ProductoId).ToList();
-            IEnumerable<Producto> prodList = _db.Productos.Where(p => ProdInCarro.Contains(p.Id));
-
+            //IEnumerable<Producto> prodList = _db.Productos.Where(p => ProdInCarro.Contains(p.Id));
+            IEnumerable<Producto> prodList = _productoRepo.ObtenerTodos(p => ProdInCarro.Contains(p.Id));
             //llenamos el VM con los datos de prodList y del usuario capturado por claim
             productoUsuarioVM = new ProductoUsuarioVM()
             {
-                usuariosAplicacion = _db.UsuariosAplicacions.FirstOrDefault(u => u.Id == claim.Value),
+                //usuariosAplicacion = _db.UsuariosAplicacions.FirstOrDefault(u => u.Id == claim.Value),
+                usuariosAplicacion = _usuarioRepo.ObtenerPrimero(u => u.Id == claim.Value),
                 productoLista = prodList.ToList(),
             };
             return View(productoUsuarioVM);
@@ -78,6 +91,10 @@ namespace Web_Palecar.Controllers
         [ActionName("Resumen")]
         public async Task<IActionResult> ResumenPost(ProductoUsuarioVM productoUsuarioVM)
         {
+            //capturamos el usuario
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
             var templatePath = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
                                                                + "templates"
                                                                + Path.DirectorySeparatorChar.ToString()
@@ -105,9 +122,33 @@ namespace Web_Palecar.Controllers
 
             await _emailSender.SendEmailAsync(WC.EmailAdmin, subjet, msgBody);
 
+            //Grabar Cabecera y detalle de orden en la base de datos
 
+            Orden orden = new Orden()
+            {
+                UsuarioAplicacionId = claim.Value,
+                NombreCompleto = productoUsuarioVM.usuariosAplicacion.NombreCompleto,
+                Email = productoUsuarioVM.usuariosAplicacion.Email,
+                Telefono = productoUsuarioVM.usuariosAplicacion.PhoneNumber,
+                FechaOrden = DateTime.Now,
+            };
 
-            return RedirectToAction(nameof(Confirmacion));
+            _ordenRepo.Agregar(orden);
+            _ordenRepo.Grabar();
+
+            foreach (var prod in productoUsuarioVM.productoLista)
+            {
+                OrdenDetalle ordenDetalle = new OrdenDetalle()
+                {
+                    OrdenId = orden.Id,
+                    ProductoId = prod.Id,
+                    
+                };
+                _ordenDetalleRepo.Agregar(ordenDetalle);
+            }
+            _productoRepo.Grabar();
+
+                return RedirectToAction(nameof(Confirmacion));
         }
 
         public IActionResult Confirmacion()

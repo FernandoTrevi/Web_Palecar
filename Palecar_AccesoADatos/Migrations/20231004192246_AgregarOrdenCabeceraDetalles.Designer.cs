@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Palecar_AccesoADatos.Datos;
 
@@ -11,9 +12,11 @@ using Palecar_AccesoADatos.Datos;
 namespace Palecar_AccesoADatos.Migrations
 {
     [DbContext(typeof(AplicationDBContext))]
-    partial class AplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231004192246_AgregarOrdenCabeceraDetalles")]
+    partial class AgregarOrdenCabeceraDetalles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -279,7 +282,7 @@ namespace Palecar_AccesoADatos.Migrations
 
                     b.HasIndex("UsuarioAplicacionId");
 
-                    b.ToTable("Orden");
+                    b.ToTable("Ordenes");
                 });
 
             modelBuilder.Entity("Palecar_Modelos.OrdenDetalle", b =>
@@ -302,7 +305,7 @@ namespace Palecar_AccesoADatos.Migrations
 
                     b.HasIndex("ProductoId");
 
-                    b.ToTable("OrdenDetalle");
+                    b.ToTable("OrdenDetalles");
                 });
 
             modelBuilder.Entity("Palecar_Modelos.Producto", b =>

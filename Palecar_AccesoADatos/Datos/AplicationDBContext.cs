@@ -15,5 +15,8 @@ namespace Palecar_AccesoADatos.Datos
         public DbSet<TipoAplicacion> TipoAplicacions { get; set; }
         public DbSet<Producto> Productos { get; set; }
         public DbSet<UsuariosAplicacion> UsuariosAplicacions { get;set; }
+        public DbSet<Orden> Orden { get; set; }
+        public DbSet<OrdenDetalle> OrdenDetalle { get; set; }
+
     }
 }
