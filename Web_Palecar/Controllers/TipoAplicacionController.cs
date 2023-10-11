@@ -32,8 +32,12 @@ namespace Web_Palecar.Controllers
             {
                 _tipoRepo.Agregar(tipoAplicacion);
                 _tipoRepo.Grabar();
+                TempData[WC.Exitosa] = "Tipo de aplicación creado exitosamente";
+
                 return RedirectToAction(nameof(Index));
             }
+            TempData[WC.Error] = "Error al crear un nuevo tipo de aplicación";
+
             return View(tipoAplicacion);
             
         }
@@ -59,8 +63,12 @@ namespace Web_Palecar.Controllers
             {
                 _tipoRepo.Actualizar(tipoAplicacion);
                 _tipoRepo.Grabar();
+                TempData[WC.Exitosa] = "Tipo de aplicación editado exitosamente";
+
                 return RedirectToAction(nameof(Index));
             }
+            TempData[WC.Error] = "No se pudo editar el tipo de aplicación";
+
             return View(tipoAplicacion);
 
         }
@@ -85,10 +93,14 @@ namespace Web_Palecar.Controllers
         {
             if (tipoAplicacion == null)
             {
+                TempData[WC.Error] = "No se pudo eliminar el tipo de aplicación";
+
                 return NotFound();
             }
             _tipoRepo.Remover(tipoAplicacion);
             _tipoRepo.Grabar();
+            TempData[WC.Exitosa] = "Se eliminó exitosamente";
+
             return RedirectToAction(nameof(Index));
 
         }

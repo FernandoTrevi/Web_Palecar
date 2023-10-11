@@ -29,6 +29,8 @@ namespace Palecar_AccesoADatos.Datos.Repositorio.IRepositorio
 
         void Remover(T entidad);
 
+        void RemoverRango(IEnumerable<T> entidad);
+
         void Grabar();
 
     }

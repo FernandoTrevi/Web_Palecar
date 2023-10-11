@@ -37,8 +37,11 @@ namespace Web_Palecar.Controllers
             {
                 _catRepo.Agregar(categoría);
                 _catRepo.Grabar();
+                TempData[WC.Exitosa] = "Categoría creada exitosamente";
                 return RedirectToAction(nameof(Index));
             }
+            TempData[WC.Error] = "Error al crear nueva categoría";
+
             return View(categoría);
            
         }
@@ -64,8 +67,12 @@ namespace Web_Palecar.Controllers
             {
                 _catRepo.Actualizar(categoría);
                 _catRepo.Grabar();
+                TempData[WC.Exitosa] = "Categoría editada exitosamente";
+
                 return RedirectToAction(nameof(Index));
             }
+            TempData[WC.Exitosa] = "Error al editar categoría";
+
             return View(categoría);
 
         }
@@ -89,10 +96,14 @@ namespace Web_Palecar.Controllers
         {
             if (categoría == null)
             {
+                TempData[WC.Error] = "Error al eliminar la categoría";
+
                 return NotFound();
             }
             _catRepo.Remover(categoría);
             _catRepo.Grabar();
+            TempData[WC.Exitosa] = "Categoría eliminada exitosamente";
+
             return RedirectToAction(nameof(Index));
 
         }

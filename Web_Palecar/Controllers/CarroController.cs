@@ -147,8 +147,9 @@ namespace Web_Palecar.Controllers
                 _ordenDetalleRepo.Agregar(ordenDetalle);
             }
             _productoRepo.Grabar();
+            TempData[WC.Exitosa] = "La orden fue enviada exitosamente";
 
-                return RedirectToAction(nameof(Confirmacion));
+            return RedirectToAction(nameof(Confirmacion));
         }
 
         public IActionResult Confirmacion()

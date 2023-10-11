@@ -19,6 +19,12 @@ namespace Palecar_AccesoADatos.Datos.Repositorio
             _db = db;   
             this.dbSet = _db.Set<T>();
         }
+
+        public void RemoverRango(IEnumerable<T> entidad)
+        {
+            dbSet.RemoveRange(entidad);
+        }
+
         void IRepositorio<T>.Agregar(T entidad)
         {
             dbSet.Add(entidad);

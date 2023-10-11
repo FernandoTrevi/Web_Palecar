@@ -95,6 +95,8 @@ namespace Web_Palecar.Controllers
                     }
                     productovm.producto.UrlImagen = filename+extension;
                     _productoRepo.Agregar(productovm.producto);
+                    TempData[WC.Exitosa] = "Nuevo Producto creada exitosamente";
+
                 }
                 else
                 {
@@ -126,6 +128,7 @@ namespace Web_Palecar.Controllers
                     }
                     //actualizamos el producto
                     _productoRepo.Actualizar(productovm.producto);
+                    TempData[WC.Exitosa] = "El producto se editó exitosamente";
 
                 }
                 _productoRepo.Grabar();
@@ -159,6 +162,8 @@ namespace Web_Palecar.Controllers
         {
             if (producto == null)
             {
+                TempData[WC.Error] = "Error al eliminar el producto";
+
                 return NotFound();
             }
             //eliminamos la imagen
@@ -171,7 +176,10 @@ namespace Web_Palecar.Controllers
             }
 
             _productoRepo.Remover(producto);           //eliminamos el producto
-            _productoRepo.Grabar();                        //guardamos los cambios en el dbContext
+            _productoRepo.Grabar();
+            TempData[WC.Exitosa] = "Producto eliminado exitosamente";
+
+            //guardamos los cambios en el dbContext
             return RedirectToAction(nameof(Index));   //redireccionamos al index
         }
 
