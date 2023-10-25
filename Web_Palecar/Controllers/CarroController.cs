@@ -49,7 +49,16 @@ namespace Web_Palecar.Controllers
             List<int> ProdInCarro = carroComprasList.Select(i=> i.ProductoId).ToList();
             //IEnumerable<Producto> prodList = _db.Productos.Where(p => ProdInCarro.Contains(p.Id));
             IEnumerable<Producto> prodList = _productoRepo.ObtenerTodos(p => ProdInCarro.Contains(p.Id));
-            return View(prodList);
+
+            List<Producto> prodListaFinal = new List<Producto>();
+            //Recorre todos los productos que están cargados en la sesiónCarroCompras
+            foreach (var objCarro in carroComprasList)
+            {
+                Producto prodTemp = prodList.FirstOrDefault(p => p.Id == objCarro.ProductoId);
+                prodTemp.TempCantidad = objCarro.Cantidad;
+                prodListaFinal.Add(prodTemp);
+            }
+            return View(prodListaFinal);
         }
 
         [HttpPost]

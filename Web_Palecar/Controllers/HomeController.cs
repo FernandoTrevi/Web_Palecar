@@ -36,7 +36,7 @@ namespace Web_Palecar.Controllers
             };
             return View(homevm);
         }
-        public IActionResult Detalle(int Id, double Monto, double Cantidad)
+        public IActionResult Detalle(int Id)
         {
             List<CarroCompra> carroComprasLista = new List<CarroCompra>();
             if (HttpContext.Session.Get<IEnumerable<CarroCompra>>(WC.SessionCarroCompras) != null &&
@@ -61,15 +61,14 @@ namespace Web_Palecar.Controllers
                 if (item.ProductoId == Id)
                 {
                     detallevm.ExisteEnCarro = true;
-                    detallevm.Cantidad = Cantidad;
-                    detallevm.Monto = Monto;
+                    
                 }
             }
             return View(detallevm);
         }
 
         [HttpPost, ActionName("Detalle")]
-        public IActionResult DetallePost(int Id, double Monto, double Cantidad)
+        public IActionResult DetallePost(int Id, DetalleVM detalleVM)
         {
             List<CarroCompra> carroComprasLista = new List<CarroCompra>();
             if (HttpContext.Session.Get<IEnumerable<CarroCompra>>(WC.SessionCarroCompras) != null &&
@@ -77,8 +76,10 @@ namespace Web_Palecar.Controllers
             {
                 carroComprasLista = HttpContext.Session.Get<List<CarroCompra>>(WC.SessionCarroCompras);
             };
-            carroComprasLista.Add(new CarroCompra { ProductoId = Id, Monto= Monto, Cantidad=Cantidad });
+            carroComprasLista.Add(new CarroCompra { ProductoId = Id, Cantidad=detalleVM.producto.TempCantidad });
             HttpContext.Session.Set(WC.SessionCarroCompras, carroComprasLista);
+            TempData[WC.Exitosa] = "Producto agregado al carro exitosamente!";
+
             return RedirectToAction("Index");
         }
 
